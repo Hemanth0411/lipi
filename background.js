@@ -128,16 +128,42 @@ function copyWithFont(fontFamily, stripFormatting) {
   } else {
     const plainText = div.innerText || div.textContent || "";
     
-    // Clean up "noise" but keep tags
-    div.querySelectorAll("*").forEach(el => {
-      const existingSize = el.style.fontSize;
+    // Capture computed styles while the div is mounted to the DOM
+    const elements = div.querySelectorAll("*");
+    const computedData = Array.from(elements).map(el => {
+      const s = window.getComputedStyle(el);
+      return {
+        fontSize: s.fontSize,
+        fontWeight: s.fontWeight,
+        fontStyle: s.fontStyle,
+        textAlign: s.textAlign,
+        display: s.display
+      };
+    });
+
+    // Clean up "noise" and re-apply essential styles as inline
+    elements.forEach((el, i) => {
+      const data = computedData[i];
       el.removeAttribute("style");
       el.removeAttribute("class");
       el.removeAttribute("id");
       el.removeAttribute("color");
       el.removeAttribute("face");
       el.removeAttribute("size");
-      if (existingSize) el.style.fontSize = existingSize;
+      
+      el.style.fontSize = data.fontSize;
+      el.style.fontWeight = data.fontWeight;
+      el.style.fontStyle = data.fontStyle;
+      
+      // Only apply alignment if it's not the default
+      if (data.textAlign !== "start" && data.textAlign !== "left") {
+        el.style.textAlign = data.textAlign;
+      }
+      
+      // Preserve block display for layout consistency
+      if (data.display === "block" || data.display === "flex") {
+        el.style.display = data.display;
+      }
     });
 
     const htmlContent = div.innerHTML;
