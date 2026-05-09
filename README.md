@@ -7,7 +7,8 @@ copy text from any webpage and paste it in your preferred font.
 ## What it does
 - Right-click any selected text → "Lipi — Copy As"
 - **Plain Text** — strips all formatting
-- **With My Font** — applies your chosen font, keeps bold/italic/size hierarchy
+- **My Font — No Styling** — applies your font, removes bold/italic
+- **My Font — Keep Styling** — applies your font, keeps bold/italic/size
 
 ## Install
 [Chrome Web Store](#) ← link after publishing
