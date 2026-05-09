@@ -76,21 +76,25 @@
       min-height: 14px;
     }
 
-    .kofi {
+    .footer-links {
       margin-top: 14px;
       padding-top: 12px;
       border-top: 1px solid #eee;
-      text-align: center;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
       font-size: 11px;
-      color: #aaa;
     }
 
-    .kofi a {
+    .footer-links a {
       color: #888;
       text-decoration: none;
+      display: flex;
+      align-items: center;
+      gap: 4px;
     }
 
-    .kofi a:hover { color: #1a1a1a; }
+    .footer-links a:hover { color: #1a1a1a; }
   </style>
 </head>
 <body>
@@ -107,8 +111,9 @@
   <button id="save">Save</button>
   <div id="status"></div>
 
-  <div class="kofi">
-    <a href="https://ko-fi.com/hemanth0411" target="_blank">☕ Support on Ko-fi</a>
+  <div class="footer-links">
+    <a href="https://github.com/Hemanth0411/lipi" target="_blank">⭐ GitHub</a>
+    <a href="https://ko-fi.com/hemanth0411" target="_blank">☕ Ko-fi</a>
   </div>
 
   <script src="popup.js"></script>
