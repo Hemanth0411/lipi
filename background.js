@@ -73,9 +73,14 @@ function copyAsPlain() {
   const range = selection.getRangeAt(0);
   const fragment = range.cloneContents();
   const div = document.createElement("div");
+  div.style.position = "absolute";
+  div.style.left = "-9999px";
   div.appendChild(fragment);
+  document.body.appendChild(div);
 
   let text = div.innerText || div.textContent || "";
+  document.body.removeChild(div);
+
   text = text.replace(/[\u200B-\u200D\uFEFF]/g, "");
   text = text.replace(/\r\n|\r/g, "\n");
   text = text.replace(/\n{3,}/g, "\n\n").trim();
@@ -92,20 +97,38 @@ function copyWithFont(fontFamily, stripFormatting) {
   const range = selection.getRangeAt(0);
   const fragment = range.cloneContents();
   const div = document.createElement("div");
+  
+  // Hide the element from view and layout
+  div.style.all = "initial";
+  div.style.position = "fixed";
+  div.style.left = "-10000px";
+  div.style.top = "0";
+  div.style.whiteSpace = "pre-wrap"; // Preserve newlines for innerText
+
   div.appendChild(fragment);
+  document.body.appendChild(div);
 
   if (stripFormatting) {
-    // Just get the text but wrap it in our font
-    const text = div.innerText || div.textContent || "";
-    const styledHTML = `<span style="font-family: '${fontFamily}', sans-serif;">${text}</span>`;
+    let text = div.innerText || div.textContent || "";
+    document.body.removeChild(div);
 
+    // Normalize newlines to match Plain Text behavior
+    text = text.replace(/[\u200B-\u200D\uFEFF]/g, "");
+    text = text.replace(/\r\n|\r/g, "\n");
+    text = text.replace(/\n{3,}/g, "\n\n").trim();
+
+    // Wrap in span with font and pre-wrap to keep newlines
+    const styledHTML = `<span style="font-family: '${fontFamily}', sans-serif; white-space: pre-wrap;">${text}</span>`;
+    
     const item = new ClipboardItem({
       "text/plain": new Blob([text], { type: "text/plain" }),
       "text/html": new Blob([styledHTML], { type: "text/html" })
     });
     navigator.clipboard.write([item]).catch(err => console.error(err));
   } else {
-    // Keep bold/italic/size but reset other styles
+    const plainText = div.innerText || div.textContent || "";
+    
+    // Clean up "noise" but keep tags
     div.querySelectorAll("*").forEach(el => {
       const existingSize = el.style.fontSize;
       el.removeAttribute("style");
@@ -117,8 +140,11 @@ function copyWithFont(fontFamily, stripFormatting) {
       if (existingSize) el.style.fontSize = existingSize;
     });
 
-    const plainText = div.innerText || div.textContent || "";
-    const styledHTML = `<span style="font-family: '${fontFamily}', sans-serif;">${div.innerHTML}</span>`;
+    const htmlContent = div.innerHTML;
+    document.body.removeChild(div);
+
+    // Use span wrapper to avoid breaking line layout in rich editors
+    const styledHTML = `<span style="font-family: '${fontFamily}', sans-serif;">${htmlContent}</span>`;
 
     const item = new ClipboardItem({
       "text/plain": new Blob([plainText], { type: "text/plain" }),
