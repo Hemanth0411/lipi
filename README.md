@@ -22,9 +22,15 @@ copy text from any webpage and paste it in your preferred font.
 - Does not work on chrome:// pages (Chrome platform restriction)
 - Desktop Word paste behavior depends on user's paste mode settings
 
+## Roadmap (v2.0)
+- **Keyboard Shortcuts**: Execute "Copy as Plain Text" or "Copy with Font" via hotkeys.
+- **Clipboard History**: Optional local storage of recent copies to re-format them later.
+- **Sticky Mode**: Option to automatically apply Lipi font to all standard copies.
+
 ## Privacy
 No data is collected. No network requests are made. 
 All preferences stored locally on your device via chrome.storage.local.
+If Clipboard History (v2) is enabled, recent copies are stored only on your local device.
 
 ## License
-MIT
+[MIT](LICENSE)
